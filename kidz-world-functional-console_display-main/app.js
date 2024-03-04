@@ -2,6 +2,7 @@ var cartValue = document.getElementById("cart-value");
 var cartButton = document.getElementById("cart");
 
 var addButtons = document.getElementsByClassName("button");
+let message = "Order Details:- ";
 
 var items = [
   {
@@ -92,15 +93,20 @@ var items = [
 
 function updateCart() {
   let cart = 0;
+
   for (index = 0; index < items.length; index++) {
     cart = cart + items[index].quantity;
   }
   cartValue.innerHTML = cart;
+  
   for (let items in cart) {
     console.log(`${items}: ${cart[items].quantity} x $${cart[items].price}`);
     totalAmount += cart[items].quantity * cart[items].price;
+  }
+
 }
-}
+
+
 
 for (let i = 0; i < addButtons.length; i++) {
   addButtons[i].onclick = (e) => {
@@ -127,8 +133,6 @@ function updatePrice() {
 
 cartButton.onclick = () => {
   updatePrice();
-
-
   for (let index = 0; index < items.length; index++) {
     if (items[index].quantity != 0) {
       console.log(
@@ -137,10 +141,18 @@ cartButton.onclick = () => {
           " - Quantity: " +
           items[index].quantity
       );
+      message += " ItemName: " + items[index].name + " Quantity: " + items[index].quantity;
     }
   }
+  message +=" TotalPrice: " + finalDollars + "$ " + finalCents + "cents";
 
   console.log(
     "The total amount is " + finalDollars + "$ and " + finalCents + " cents"
   );
+  PurchasedItems();
 };
+
+function PurchasedItems(){
+  let encodedMessage = encodeURIComponent(message);
+  window.open(`https://api.whatsapp.com/send?text=${encodedMessage}`, '_blank');
+}
